@@ -1,6 +1,8 @@
 {
     "game_title": "Моя Игра",
-    "background_color": "#1F2A44",
-    "button_color": "#2980B9",
-    "text_color": "white"
+    "changelog": [
+        "- нет",
+        "- нет2",
+        "- нет3"
+    ]
 }
