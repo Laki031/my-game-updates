@@ -12,7 +12,7 @@ import shutil
 class GameLauncher:
     def __init__(self, root):
         self.root = root
-        self.root.title("Game Launcher")
+        self.root.title("Game Launcher1")
         self.root.geometry("1200x700")
         self.root.resizable(False, False)
 
