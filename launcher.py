@@ -191,7 +191,7 @@ class GameLauncher:
         self.progress.pack_forget()
         
         self.version_file = "version.json"
-        self.game_path = "game.py"
+        self.game_path = "gamegg.py"
         self.launcher_path = "launcher.py"
         self.repo_base_url = "https://raw.githubusercontent.com/Laki031/my-game-updates/main"
         
@@ -202,7 +202,7 @@ class GameLauncher:
         config_file = "launcher_config.json"
         self.config = {"game_title": "Моя Игра"}
         if os.path.exists(config_file):
-            with open(config_file, "r", encoding="utf-8") as f:  # Указана кодировка UTF-8
+            with open(config_file, "r", encoding="utf-8") as f:
                 self.config = json.load(f)
 
     def open_settings_menu(self):
@@ -268,7 +268,7 @@ class GameLauncher:
             self.root.update()
             time.sleep(0.5)
             
-            game_url = f"{self.repo_base_url}/game.py?{int(time.time())}"
+            game_url = f"{self.repo_base_url}/gamegg.py?{int(time.time())}"
             response = requests.get(game_url, stream=True)
             response.raise_for_status()
             
@@ -325,7 +325,7 @@ class GameLauncher:
             subprocess.Popen(["open" if sys.platform == "darwin" else "xdg-open", folder_path])
 
     def update_launcher(self):
-        """Обновление лаунчера с прогресс-баром"""
+        """Обновление лаунчера с прогресс-баром и перезапуском"""
         try:
             self.progress.pack()
             self.progress["value"] = 0
@@ -376,11 +376,16 @@ class GameLauncher:
                 with open(self.version_file, "w", encoding="utf-8") as f:
                     json.dump(version_data, f)
                 
+                # Заменяем текущий файл и перезапускаем
                 shutil.move("launcher_new.py", self.launcher_path)
                 self.progress.pack_forget()
                 self.version_label.config(text=f"Версия игры: {version_data['game_version']} | Лаунчер: {server_launcher_version}")
-                self.status_label.config(text="Лаунчер обновлен, перезапустите")
-                self.root.quit()
+                self.status_label.config(text="Лаунчер обновлен, перезапускается...")
+                self.root.update()
+                time.sleep(1)  # Небольшая задержка для отображения статуса
+                
+                # Перезапуск лаунчера
+                os.execv(sys.executable, [sys.executable, self.launcher_path])
             else:
                 self.progress.pack_forget()
                 self.status_label.config(text="Все обновления установлены")
@@ -399,7 +404,7 @@ class GameLauncher:
         
         try:
             process = subprocess.Popen([sys.executable, self.game_path])
-            time.sleep(0.5)
+            time.sleep(3)  # Задержка 3 секунды перед закрытием
             if process.poll() is None:
                 self.root.quit()
             else:
