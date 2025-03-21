@@ -202,7 +202,7 @@ class GameLauncher:
         config_file = "launcher_config.json"
         self.config = {"game_title": "Моя Игра"}
         if os.path.exists(config_file):
-            with open(config_file, "r", encoding="utf-8") as f:
+            with open(config_file, "r", encoding="utf-8") as f:  # Указана кодировка UTF-8
                 self.config = json.load(f)
 
     def open_settings_menu(self):
@@ -325,7 +325,7 @@ class GameLauncher:
             subprocess.Popen(["open" if sys.platform == "darwin" else "xdg-open", folder_path])
 
     def update_launcher(self):
-        """Обновление лаунчера с прогресс-баром и перезапуском"""
+        """Обновление лаунчера с прогресс-баром"""
         try:
             self.progress.pack()
             self.progress["value"] = 0
@@ -376,16 +376,11 @@ class GameLauncher:
                 with open(self.version_file, "w", encoding="utf-8") as f:
                     json.dump(version_data, f)
                 
-                # Заменяем текущий файл и перезапускаем
                 shutil.move("launcher_new.py", self.launcher_path)
                 self.progress.pack_forget()
                 self.version_label.config(text=f"Версия игры: {version_data['game_version']} | Лаунчер: {server_launcher_version}")
-                self.status_label.config(text="Лаунчер обновлен, перезапускается...")
-                self.root.update()
-                time.sleep(1)  # Небольшая задержка для отображения статуса
-                
-                # Перезапуск лаунчера
-                os.execv(sys.executable, [sys.executable, self.launcher_path])
+                self.status_label.config(text="Лаунчер обновлен, перезапустите")
+                self.root.quit()
             else:
                 self.progress.pack_forget()
                 self.status_label.config(text="Все обновления установлены")
@@ -404,7 +399,7 @@ class GameLauncher:
         
         try:
             process = subprocess.Popen([sys.executable, self.game_path])
-            time.sleep(3)  # Задержка 3 секунды перед закрытием
+            time.sleep(3)
             if process.poll() is None:
                 self.root.quit()
             else:
